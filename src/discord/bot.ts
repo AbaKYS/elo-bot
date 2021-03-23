@@ -1,5 +1,6 @@
 import discord from "discord.js"
 import logging from "../logging"
+import { SlashCommand, SlashCommandListener } from "./slash-commands/register-command"
 
 const log = logging("bot")
 
@@ -17,6 +18,7 @@ export class Bot {
   isReady = false
 
   public messageHandlers: DiscordMessageHandler[] = []
+  public slashCommandHandlers: Map<SlashCommand, SlashCommandListener> = new Map();
 
   constructor(options: BotOptions = {}) {
     this.client = new discord.Client()
@@ -44,6 +46,7 @@ export class Bot {
       log.error("Discord token is missing!")
     } else {
       try {
+        log.info("Logging in to discord...")
         await this.client.login(this.options.token)
         log.info("Logged in")
       } catch (err) {
