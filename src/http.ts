@@ -1,5 +1,5 @@
-const express = require('express')
-const api = require('./api')
+import express, { NextFunction, Request, Response } from "express";
+import api from "./api";
 
 const app = express()
 app.use(express.json())
@@ -41,7 +41,7 @@ app.get('/history', (req, res, next) => {
 	.catch(next)
 })
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 	if (err instanceof Error) {
 		console.error(err)
 		return res.status(500).json({ message: err.message, stack: err.stack })
@@ -49,4 +49,4 @@ app.use((err, req, res, next) => {
 	return res.status(400).json(err)
 })
 
-module.exports = app;
+export default app;

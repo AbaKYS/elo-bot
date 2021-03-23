@@ -1,6 +1,6 @@
 const app = require('./http')
 const slackBot = require('./slack-bot')
-const package = require('../package')
+const pkgJson = require('../package')
 const config = require('./config')
 
 if (config.slackApiToken) {
@@ -13,4 +13,4 @@ app.listen(port, () => {
 	console.log('Listening on', port)
 })
 
-console.log('Elo ranking server %s', package.version)
+console.log('Elo ranking server %s', pkgJson.version)

@@ -1,5 +1,6 @@
-const mongodb = require('mongodb')
-const config = require('./config')
+import mongodb from 'mongodb';
+import config from './config';
+
 const connection = mongodb.MongoClient.connect(config.mongoUrl)
 .catch(err => {
 	console.error('Error connecting to database')
@@ -7,4 +8,4 @@ const connection = mongodb.MongoClient.connect(config.mongoUrl)
 	process.exit(-1)
 })
 
-module.exports = connection
+export default connection
