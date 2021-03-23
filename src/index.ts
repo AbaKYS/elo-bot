@@ -1,15 +1,22 @@
-const app = require("./http");
-const slackBot = require("./slack-bot");
-const pkgJson = require("../package");
-const config = require("./config");
+import app from "./http";
+//import slackBot from "./slack-bot";
+import pkgJson from "../package.json";
+import config from "./config";
+import logging from "./logging";
 
-if (config.slackApiToken) {
-  slackBot(config.slackApiToken).catch(console.error);
+const args = process.argv.slice(2); //first two are "node" and script path
+const log = logging("index");
+log.info("Elo ranking server %s", pkgJson.version);
+
+if (args[0] === "registerCommands") {
+
 }
+
+//if (config.slackApiToken) {
+//  slackBot(config.slackApiToken).catch(console.error);
+//}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log("Listening on", port);
+  log.info({ port }, "Listening on port %s", port);
 });
-
-console.log("Elo ranking server %s", pkgJson.version);
