@@ -1,16 +1,12 @@
+import "./env";
 import app from "./http";
 //import slackBot from "./slack-bot";
-import pkgJson from "../package.json";
-import config from "./config";
+//import config from "./config";
 import logging from "./logging";
 
-const args = process.argv.slice(2); //first two are "node" and script path
 const log = logging("index");
-log.info("Elo ranking server %s", pkgJson.version);
+log.info("Elo ranking server");
 
-if (args[0] === "registerCommands") {
-
-}
 
 //if (config.slackApiToken) {
 //  slackBot(config.slackApiToken).catch(console.error);
