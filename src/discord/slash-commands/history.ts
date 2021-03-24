@@ -6,7 +6,7 @@ import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
 import { joinStrings } from "./util/join-names";
 
-const log = logger("new-match");
+const log = logger("history");
 
 export const historyCommand: SlashCommand = {
   name: "history",
@@ -48,6 +48,12 @@ export const historyCommandHandler: SlashCommandListener = {
         // Histories for all players
         histories = await api.getHistory(amountOfGames);
       }
+
+      log.debug(
+        "Found %s histories for player '%s'",
+        histories.length,
+        playerName
+      );
 
       const content = histories
         .map(

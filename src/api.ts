@@ -63,14 +63,14 @@ const api = {
    */
   async getRankings() {
     const players = await getCollection<Player>("players");
-    return players.find().sort({ elo: -1 }).toArray();
+    return players.find().sort({ elo: SortDescending }).toArray();
   },
 
   async getHistory(limit = 0): Promise<HistoryWithoutId[]> {
     const history = await getCollection<History>("history");
     const documents = await history
       .find()
-      .sort(SortDescending)
+      .sort({ time: SortDescending })
       .limit(limit)
       .toArray();
     return documents.map((doc) => {
@@ -86,7 +86,7 @@ const api = {
     const history = await getCollection<History>("history");
     const documents = await history
       .find({ "players.name": name })
-      .sort("time", SortDescending)
+      .sort({ time: SortDescending })
       .limit(limit)
       .toArray();
     return documents.map((doc) => {
