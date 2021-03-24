@@ -7,5 +7,5 @@ export default (
   kFactor?: number
 ): number => {
   const expected = elo.getExpected(winnerElo, loserElo);
-  return (kFactor || 32) * (1 - expected);
+  return (kFactor || 40) * (1 - expected);
 };
