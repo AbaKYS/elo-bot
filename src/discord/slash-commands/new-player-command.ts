@@ -1,4 +1,5 @@
 import { Client } from "discord.js";
+import api from "../../api";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
@@ -26,6 +27,11 @@ export async function registerNewPlayerCommand(
 
 export const newPlayerCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    return { content: "Testing" };
+    const playerName = interaction.data?.options?.[0].value;
+    if (playerName) {
+      api.newPlayer(playerName);
+      return { content: `Player ${playerName} has been added` };
+    }
+    return { content: "No name found, now kys" };
   },
 };
