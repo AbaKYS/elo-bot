@@ -48,9 +48,9 @@ export const newMatchCommandHandler: SlashCommandListener = {
     }
 
     try {
-      api.resolveGame({ winner, loser });
+      const matchStats = await api.resolveGame({ winner, loser });
       return {
-        content: `Congratulations ${winner}! ${loser} you can just go and kys`,
+        content: `Congratulations **${winner}** you gained **${matchStats.deltaElo}** elo! **${loser}** you can just go and kys`,
       };
     } catch (err) {
       log.error({ err }, "Failed to register game: %s", err.message);
