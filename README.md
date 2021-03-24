@@ -1,5 +1,13 @@
-[![Build Status](https://travis-ci.org/jakobmulvad/elo-rankings.svg?branch=master)](https://travis-ci.org/jakobmulvad/elo-rankings)
+<!--[![Build Status](https://travis-ci.org/jakobmulvad/elo-rankings.svg?branch=master)](https://travis-ci.org/jakobmulvad/elo-rankings)
+-->
+
 # elo-rankings
+
+Based on [elo-rankings](https://github.com/jakobmulvad/elo-rankings).
+Modified  to add a discord bot instead of slack.
+The following readme is from the original repo.
+
+---
 
 A simple service I wrote to keep track of the ELO rating of foosball players at work, but it can be used to create a league for any type of game. It has a web api and a slack bot interface.
 
