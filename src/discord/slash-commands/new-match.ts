@@ -15,14 +15,14 @@ export const newMatchCommand: SlashCommand = {
     {
       type: 3,
       name: "WinnerName",
-      description: "Type inn playername of winner",
+      description: "Type in playername of the winner",
       default: false,
       required: true,
     },
     {
       type: 3,
       name: "LoserName",
-      description: "Type inn the playername of the loser",
+      description: "Type in the playername of the loser",
       default: false,
       required: true,
     },
@@ -50,7 +50,7 @@ export const newMatchCommandHandler: SlashCommandListener = {
 
     try {
       api.resolveGame({ winner, loser });
-      return { content: `Congratulations ${winner} and to ${loser}: kys` };
+      return { content: `Congratulations ${winner}! And to ${loser}: kys` };
     } catch (err) {
       log.error({ err }, "Failed to register game: %s", err.message);
       return { content: "Failed to register the game: " + err.message };
