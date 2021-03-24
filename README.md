@@ -5,13 +5,18 @@
 
 Based on [elo-rankings](https://github.com/jakobmulvad/elo-rankings).
 Modified  to add a discord bot instead of slack.
-The following readme is from the original repo.
 
 ---
 
-A simple service I wrote to keep track of the ELO rating of foosball players at work, but it can be used to create a league for any type of game. It has a web api and a slack bot interface.
+The following is from the original repo:  
+> A simple service I wrote to keep track of the ELO rating of foosball players at work, but it can be used to create a league for any type of game. It has a web api and a slack bot interface.
+>
+> ELO is a system used mostly in chess and video games to rate the skill level of players. Read more about ELO rating here: https://en.wikipedia.org/wiki/Elo_rating_system
 
-ELO is a system used mostly in chess and video games to rate the skill level of players. Read more about ELO rating here: https://en.wikipedia.org/wiki/Elo_rating_system
+## Configure
+
+Copy the `.env.example` and name it `.env` or `.env.production`, `.env.development`, `.env.local` etc.
+Fill inn the missing fields.
 
 ## Run the server
 
