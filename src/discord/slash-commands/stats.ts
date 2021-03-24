@@ -36,9 +36,7 @@ export const statsCommandHandler: SlashCommandListener = {
         const content = allPlayers
           .map(
             (player, index) =>
-              `**${index + 1}**. **${player.name}** with elo **${
-                player.elo
-              }** elo.`
+              `${index + 1}. **${player.name}** with elo **${player.elo}** elo.`
           )
           .join("\n");
         return {
