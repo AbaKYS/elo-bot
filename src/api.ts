@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from "mongodb";
+import { Collection, Cursor, ObjectId } from "mongodb";
 import getDb from "./get-db";
 import Ajv from "ajv";
 import elo from "./elo";
@@ -18,6 +18,9 @@ interface Player {
 }
 
 type PlayerName = string;
+
+const SortAscending = 1;
+const SortDescending = -1;
 
 interface History {
   _id?: ObjectId;
@@ -48,6 +51,11 @@ function getAverageElo(docs: Player[]) {
   return Math.round(eloSum / docs.length);
 }
 
+type HistoryWithoutId = Exclude<History, "_id">;
+
+// For help with MongoDb queries, see: https://docs.mongodb.com/manual/tutorial/query-documents/
+// and https://mongodb.github.io/node-mongodb-native/2.2/api/Collection.html#find
+
 const api = {
   /**
    *
@@ -58,9 +66,25 @@ const api = {
     return players.find().sort({ elo: -1 }).toArray();
   },
 
-  async getHistory(): Promise<Exclude<History, "_id">[]> {
+  async getHistory(): Promise<HistoryWithoutId[]> {
     const history = await getCollection<History>("history");
     const documents = await history.find().toArray();
+    return documents.map((doc) => {
+      delete (doc as any)._id;
+      return doc;
+    });
+  },
+
+  async getHistoryForPlayer(
+    name: PlayerName,
+    limit = 10
+  ): Promise<HistoryWithoutId[]> {
+    const history = await getCollection<History>("history");
+    const documents = await history
+      .find({ "players.name": name })
+      .sort("time", SortDescending)
+      .limit(limit)
+      .toArray();
     return documents.map((doc) => {
       delete (doc as any)._id;
       return doc;
