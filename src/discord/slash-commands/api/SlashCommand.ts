@@ -7,5 +7,5 @@ export interface SlashCommand {
   name: SlashCommandName;
   /** Human readable description. */
   description: string;
-  options: SlashCommandOption[];
+  options?: SlashCommandOption[];
 }

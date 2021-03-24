@@ -49,6 +49,10 @@ function getAverageElo(docs: Player[]) {
 }
 
 const api = {
+  /**
+   *
+   * @returns All players sorted by elo first
+   */
   getRankings: async function () {
     const players = await getCollection<Player>("players");
     return players.find().sort({ elo: -1 }).toArray();
