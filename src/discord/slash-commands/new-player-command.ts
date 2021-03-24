@@ -1,8 +1,6 @@
 import { Client } from "discord.js";
-import {
-  registerCommand,
-  SlashCommand,
-} from "./register-command";
+import { registerCommand } from "./register-command";
+import { SlashCommand } from "./SlashCommand";
 
 export const newPlayerCommand: SlashCommand = {
   name: "newplayer",
@@ -18,6 +16,9 @@ export const newPlayerCommand: SlashCommand = {
   ],
 };
 
-export async function registerNewPlayerCommand(client: Client, guildId: string) {
+export async function registerNewPlayerCommand(
+  client: Client,
+  guildId: string
+) {
   return registerCommand(client, guildId, newPlayerCommand);
 }

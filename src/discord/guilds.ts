@@ -6,11 +6,10 @@ export function getGuilds() {
 
   const client = new Client();
   client.on("ready", () => {
-
-    const guilds = client.guilds.cache.map(guild => guild.id);
-    log.info({guilds}, "Got guilds");
+    const guilds = client.guilds.cache.map((guild) => guild.id);
+    log.info({ guilds }, "Got guilds");
     process.exit(0);
-  })
+  });
 
   client.login(process.env.DISCORD_BOT_TOKEN);
 }

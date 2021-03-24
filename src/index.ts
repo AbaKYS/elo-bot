@@ -7,7 +7,6 @@ import logging from "./logging";
 const log = logging("index");
 log.info("Elo ranking server");
 
-
 //if (config.slackApiToken) {
 //  slackBot(config.slackApiToken).catch(console.error);
 //}

@@ -15,12 +15,16 @@ export function registerAll() {
         try {
           log.info("Registering for guild %s", guildId);
           await registerNewPlayerCommand(client, guildId);
-          log.info({guildId}, "Registered newPlayerCommand");
+          log.info({ guildId }, "Registered newPlayerCommand");
         } catch (err) {
-          log.error({err}, "Failed to register newPlayerCommand: %s", err.message);
+          log.error(
+            { err },
+            "Failed to register newPlayerCommand: %s",
+            err.message
+          );
         }
       }
-    } catch(err) {
+    } catch (err) {
       log.error(err);
     }
 

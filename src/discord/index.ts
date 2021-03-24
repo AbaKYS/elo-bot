@@ -1,7 +1,6 @@
+import logging from "../logging";
 import { Bot } from "./bot";
 import { getUrl } from "./invite-url";
-import logging from "../logging";
-import { listenToCommands } from "./slash-commands/register-command";
 import { newPlayerCommand } from "./slash-commands/new-player-command";
 
 const log = logging("discord");
@@ -17,10 +16,9 @@ export async function startBot() {
 
   bot.slashCommandHandlers.set(newPlayerCommand, {
     async onCommand(client, command, interaction) {
-      return {content: "Testing"};
-    }
+      return { content: "Testing" };
+    },
   });
-
 
   await bot.start();
 }
