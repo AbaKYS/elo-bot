@@ -1,5 +1,8 @@
 import dotenv from "dotenv"
 import path from "path"
+import logging from "../logging"
+
+const log = logging(".env")
 
 function localFile(fileName: string): string {
   return path.resolve(process.cwd(), fileName)
@@ -10,14 +13,12 @@ if (process.env.NODE_ENV === undefined) {
 }
 
 let env = process.env.NODE_ENV || "production"
+const envFiles = [`.env.${env}.local`, `.env.${env}`, ".env"];
 
-dotenv.config({
-  path: localFile(`.env.${env}.local`),
-})
-dotenv.config({
-  path: localFile(`.env.${env}`),
-})
-dotenv.config({
-  path: localFile(".env"),
-})
+log.info({envFiles}, "Loading .env files for %s", env)
 
+for (const envFile of envFiles) {
+  dotenv.config({
+    path: localFile(envFile),
+  })
+}
