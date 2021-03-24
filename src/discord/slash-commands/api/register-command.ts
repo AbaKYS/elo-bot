@@ -1,15 +1,6 @@
 import { Client } from "discord.js";
 import { SlashCommand } from "./SlashCommand";
 
-export interface SlashCommandOption {
-  type: 3 | number;
-  /** Option name. No spaces */
-  name: string;
-  /** Human readable description */
-  description: string;
-  default: boolean;
-  required: boolean;
-}
 /**
  * Register a command for the bot. This is a one-time thing.
  * Create commands with https://rauf.wtf/slash/.
