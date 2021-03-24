@@ -22,3 +22,8 @@ if (config.discordToken) {
 } else {
   log.warn("No discord token found! Check the .env file");
 }
+
+process.on("SIGINT", () => {
+  log.info("Process interrupted. Exiting");
+  process.exit(0);
+});
