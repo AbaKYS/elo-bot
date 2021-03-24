@@ -50,7 +50,6 @@ interface InteractionApplicationCommandCallbackData {
 export interface SlashCommandListener {
   onCommand(
     client: Client,
-    command: SlashCommand,
     interaction: Interaction
   ): Promise<InteractionApplicationCommandCallbackData>;
 }
@@ -66,11 +65,7 @@ export function listenToCommands(
     "INTERACTION_CREATE" as any,
     async (interaction: Interaction) => {
       try {
-        const responseMessage = await listener.onCommand(
-          client,
-          command,
-          interaction
-        );
+        const responseMessage = await listener.onCommand(client, interaction);
 
         (client as any).api
           .interactions(interaction.id, interaction.token)

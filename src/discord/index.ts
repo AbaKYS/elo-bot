@@ -14,8 +14,8 @@ export async function startBot() {
   // Load handlers here
   log.info("Loaded " + bot.messageHandlers.length + " message handlers");
 
-  bot.slashCommandHandlers.set(newPlayerCommand, {
-    async onCommand(client, command, interaction) {
+  bot.slashCommandHandlers.set(newPlayerCommand.name, {
+    async onCommand(client, interaction) {
       return { content: "Testing" };
     },
   });

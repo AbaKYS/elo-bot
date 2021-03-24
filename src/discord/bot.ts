@@ -1,7 +1,10 @@
 import discord from "discord.js";
 import logging from "../logging";
-import { SlashCommandListener } from "./slash-commands/listen-to-commands";
-import { SlashCommand } from "./slash-commands/SlashCommand";
+import {
+  Interaction,
+  SlashCommandListener,
+} from "./slash-commands/listen-to-commands";
+import { SlashCommand, SlashCommandName } from "./slash-commands/SlashCommand";
 
 const log = logging("bot");
 
@@ -20,7 +23,7 @@ export class Bot {
 
   public messageHandlers: DiscordMessageHandler[] = [];
   public slashCommandHandlers: Map<
-    SlashCommand,
+    SlashCommandName,
     SlashCommandListener
   > = new Map();
 
@@ -32,6 +35,34 @@ export class Bot {
   }
 
   public async start() {
+    if (!this.options.token || this.options.token === "<missing>") {
+      log.error(
+        {
+          tokenUri: `https://discord.com/developers/applications/${process.env.DISCORD_BOT_CLIENT_ID}/bot`,
+        },
+        "Discord token is missing! Set it in .env as DISCORD_BOT_TOKEN"
+      );
+      return;
+    }
+
+    this.listenToReady();
+    this.listenToSlashCommands();
+    this.listenToMessages();
+
+    try {
+      log.info("Logging in to discord...");
+      await this.client.login(this.options.token);
+      log.info("Logged in");
+    } catch (err) {
+      log.error(
+        { err, token: this.options.token },
+        "Failed to log in to discord: %s",
+        err.message
+      );
+    }
+  }
+
+  private listenToReady() {
     this.client.once("ready", () => {
       this.isReady = true;
 
@@ -41,31 +72,61 @@ export class Bot {
         type: "WATCHING",
       });
     });
+  }
 
+  private listenToMessages() {
     this.client.on("message", (message) => {
       this.handleMessage(message);
     });
-
-    if (!this.options.token || this.options.token === "<missing>") {
-      log.error("Discord token is missing!");
-    } else {
-      try {
-        log.info("Logging in to discord...");
-        await this.client.login(this.options.token);
-        log.info("Logged in");
-      } catch (err) {
-        log.error(
-          { token: this.options.token },
-          "Failed to log in to discord: %s",
-          err
-        );
-      }
-    }
   }
 
   handleMessage(message: discord.Message) {
     this.messageHandlers.forEach((handler) => {
       handler.handle(message);
     });
+  }
+
+  private listenToSlashCommands() {
+    this.client.ws.on(
+      "INTERACTION_CREATE" as any,
+      (interaction: Interaction) => {
+        this.handleInteractions(interaction);
+      }
+    );
+  }
+
+  /** Interactions are also known as slash commands. */
+  private async handleInteractions(interaction: Interaction) {
+    const handler = this.slashCommandHandlers.get(interaction.id);
+
+    if (!handler) {
+      log.warn(
+        { interaction },
+        "No handler found for interaction %s",
+        interaction.id
+      );
+      return;
+    }
+
+    try {
+      const responseMessage = await handler.onCommand(this.client, interaction);
+      (this.client as any).api
+        .interactions(interaction.id, interaction.token)
+        .callback.post({
+          data: {
+            type: 4,
+            data: responseMessage,
+          },
+        });
+
+      // Alternatively to send followup messages
+      //new Discord.WebhookClient(client.user.id, interaction.token).send('hello world')
+    } catch (err) {
+      log.error(
+        { interaction },
+        "Failed to get response for command %s",
+        interaction.id
+      );
+    }
   }
 }
