@@ -36,8 +36,9 @@ export async function registerHistoryCommand(client: Client, guildId: string) {
 
 export const historyCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    const playerName = interaction.data?.options?.[0].value as string;
-    const amountOfGames = interaction.data?.options?.[1].value as number;
+    const options = interaction.data?.options;
+    const playerName = options?.[0]?.value as string | undefined;
+    const amountOfGames = options?.[1]?.value as number | undefined;
 
     try {
       let histories;
@@ -58,11 +59,13 @@ export const historyCommandHandler: SlashCommandListener = {
       const content = histories
         .map(
           ({ winners, losers, time, deltaElo }) =>
-            `${time.toLocaleString()} - ${joinStrings(
+            `\`${time.toLocaleString()}\` - **${joinStrings(
               winners
-            )} beat ${joinStrings(losers)} and gained ${deltaElo} elo.`
+            )}** beat **${joinStrings(
+              losers
+            )}** and gained **${deltaElo}** elo.`
         )
-        .join(`\n------------`);
+        .join(`\n`);
       return { content };
     } catch (err) {
       log.error({ err }, "Failed to fetch history: %s", err.message);
