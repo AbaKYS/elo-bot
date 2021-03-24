@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
-import { registerCommand } from "./register-command";
-import { SlashCommand } from "./SlashCommand";
+import { registerCommand } from "./api/register-command";
+import { SlashCommand } from "./api/SlashCommand";
 
 export const newPlayerCommand: SlashCommand = {
   name: "newplayer",

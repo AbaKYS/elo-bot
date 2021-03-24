@@ -6,7 +6,7 @@ import {
   Snowflake,
   User,
 } from "discord.js";
-import logging from "../../logging";
+import logging from "../../../logging";
 import { SlashCommand } from "./SlashCommand";
 
 enum InteractionType {

@@ -3,8 +3,11 @@ import logging from "../logging";
 import {
   Interaction,
   SlashCommandListener,
-} from "./slash-commands/listen-to-commands";
-import { SlashCommand, SlashCommandName } from "./slash-commands/SlashCommand";
+} from "./slash-commands/api/listen-to-commands";
+import {
+  SlashCommand,
+  SlashCommandName,
+} from "./slash-commands/api/SlashCommand";
 
 const log = logging("bot");
 
