@@ -15,7 +15,7 @@ ELO is a system used mostly in chess and video games to rate the skill level of 
 
 ## Run the server
 
-Install dependencies with `npm install` then start the server with `npm start`. 
+Install dependencies with `npm install` then build and start the server with `npm run build`, `npm start`. 
 
 ## Todo list
 - Generate graphs and expose them through http and slack

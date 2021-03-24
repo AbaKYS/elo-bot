@@ -8,7 +8,7 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node src/index.js",
+    "start": "node out/index.js",
     "test": "mocha"
   },
   "keywords": [],
