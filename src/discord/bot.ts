@@ -25,7 +25,7 @@ export class Bot {
   isReady = false;
 
   public messageHandlers: DiscordMessageHandler[] = [];
-  public slashCommandHandlers: Map<
+  private slashCommandHandlers: Map<
     SlashCommandName,
     SlashCommandListener
   > = new Map();
@@ -35,6 +35,13 @@ export class Bot {
     this.options = options;
 
     this.options.token = this.options.token || process.env.DISCORD_BOT_TOKEN;
+  }
+
+  public addHandler(
+    slashCommand: SlashCommand,
+    listener: SlashCommandListener
+  ) {
+    this.slashCommandHandlers.set(slashCommand.name.toLowerCase(), listener);
   }
 
   public async start() {

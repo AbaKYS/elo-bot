@@ -26,10 +26,10 @@ export async function startBot() {
   // Load handlers here
   log.info("Loaded " + bot.messageHandlers.length + " message handlers");
 
-  bot.slashCommandHandlers.set(newPlayerCommand.name, newPlayerCommandHandler);
-  bot.slashCommandHandlers.set(undoLastMatchCommand.name, undoLastMatchHandler);
-  bot.slashCommandHandlers.set(newMatchCommand.name, newMatchCommandHandler);
-  bot.slashCommandHandlers.set(statsCommand.name, statsCommandHandler);
+  bot.addHandler(newPlayerCommand, newPlayerCommandHandler);
+  bot.addHandler(undoLastMatchCommand, undoLastMatchHandler);
+  bot.addHandler(newMatchCommand, newMatchCommandHandler);
+  bot.addHandler(statsCommand, statsCommandHandler);
 
   await bot.start();
 }
