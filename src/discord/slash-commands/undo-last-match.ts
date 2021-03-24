@@ -3,6 +3,9 @@ import api from "../../api";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
+import logger from "../../logging";
+
+const log = logger("statsCommand");
 
 export const undoLastMatchCommand: SlashCommand = {
   name: "undoMatch",
@@ -18,7 +21,12 @@ export async function registerUndoLastMatchCommand(
 
 export const undoLastMatchHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    api.undoLastGame();
-    return { content: "Last match deleted" };
+    try {
+      await api.undoLastGame();
+      return { content: "Last match deleted" };
+    } catch (err) {
+      log.error({ err }, "Failed to register name: %s", err.message);
+      return { content: "Failed to register the game: " + err.message };
+    }
   },
 };

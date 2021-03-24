@@ -3,6 +3,9 @@ import api from "../../api";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
+import logger from "../../logging";
+
+const log = logger("statsCommand");
 
 export const newPlayerCommand: SlashCommand = {
   name: "newplayer",
@@ -27,11 +30,16 @@ export async function registerNewPlayerCommand(
 
 export const newPlayerCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    const playerName = interaction.data?.options?.[0].value;
+    const playerName = interaction.data?.options?.[0].value as string;
     if (playerName) {
-      api.newPlayer(playerName);
-      return { content: `Player ${playerName} has been added` };
+      try {
+        await api.newPlayer({ name: playerName });
+        return { content: `Player ${playerName} has been added` };
+      } catch (err) {
+        log.error({ err }, "Failed to register name: %s", err.message);
+        return { content: "Failed to register the name: " + err.message };
+      }
     }
-    return { content: "No name found, now kys" };
+    return { content: "Try to write in a name you stupid fuck, now kys" };
   },
 };
