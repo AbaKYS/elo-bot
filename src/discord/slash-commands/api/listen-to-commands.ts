@@ -14,13 +14,13 @@ enum InteractionType {
   ApplicationCommand = 2,
 }
 
-interface ApplicationCommandInteractionDataOption {
+export interface ApplicationCommandInteractionDataOption {
   name: string;
   value?: any;
   options?: ApplicationCommandInteractionDataOption[];
 }
 
-interface ApplicationCommandInteractionData {
+export interface ApplicationCommandInteractionData {
   id: Snowflake;
   name: string;
   options?: ApplicationCommandInteractionDataOption[];

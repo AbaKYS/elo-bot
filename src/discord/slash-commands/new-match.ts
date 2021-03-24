@@ -4,6 +4,7 @@ import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
+import { find } from "./util/find-option";
 
 const log = logger("new-match");
 
@@ -34,12 +35,9 @@ export async function registerNewMatchCommand(client: Client, guildId: string) {
 
 export const newMatchCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    const winner = interaction.data?.options?.find(
-      (option) => option.name === "winnername"
-    )?.value;
-    const loser: string = interaction.data?.options?.find(
-      (option) => option.name === "losername"
-    )?.value;
+    const options = interaction.data?.options;
+    const winner = find<string>("winnername", options);
+    const loser = find<string>("losername", options);
 
     if (!loser || !winner) {
       return {
@@ -48,7 +46,7 @@ export const newMatchCommandHandler: SlashCommandListener = {
     }
 
     try {
-      api.resolveGame({ winner, loser });
+      await api.resolveGame({ winner, loser });
       return {
         content: `Congratulations ${winner}! ${loser} you can just go and kys`,
       };
