@@ -4,6 +4,7 @@ import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
+import { find } from "./util/find-option";
 import { joinStrings } from "./util/join-names";
 
 const log = logger("history");
@@ -36,8 +37,9 @@ export async function registerHistoryCommand(client: Client, guildId: string) {
 
 export const historyCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    const playerName = interaction.data?.options?.[0].value as string;
-    const amountOfGames = interaction.data?.options?.[1].value as number;
+    const options = interaction.data?.options;
+    const playerName = find<string>("name", options);
+    const amountOfGames = find<number>("amount", options);
 
     try {
       let histories;
@@ -55,15 +57,18 @@ export const historyCommandHandler: SlashCommandListener = {
         playerName
       );
 
-      const content = histories
-        .map(
-          ({ winners, losers, time, deltaElo }) =>
-            `${time.toLocaleString()} - ${joinStrings(
-              winners
-            )} beat ${joinStrings(losers)} and gained ${deltaElo} elo.`
-        )
-        .join(`\n------------`);
-      return { content };
+      const content =
+        histories
+          .map(
+            ({ winners, losers, time, deltaElo }) =>
+              `\`${time.toLocaleString()}\` - **${joinStrings(
+                winners
+              )}** beat **${joinStrings(
+                losers
+              )}** and gained **${deltaElo}** elo.`
+          )
+          .join(`\n`) || "No matches found";
+      return { content: content };
     } catch (err) {
       log.error({ err }, "Failed to fetch history: %s", err.message);
       return { content: "Failed to fetch history: " + err.message };

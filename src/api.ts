@@ -72,6 +72,7 @@ const api = {
       .find()
       .sort({ time: SortDescending })
       .limit(limit)
+      .sort({ time: SortAscending })
       .toArray();
     return documents.map((doc) => {
       delete (doc as any)._id;
@@ -88,6 +89,7 @@ const api = {
       .find({ "players.name": name })
       .sort({ time: SortDescending })
       .limit(limit)
+      .sort({ time: SortAscending })
       .toArray();
     return documents.map((doc) => {
       delete (doc as any)._id;
