@@ -18,6 +18,6 @@ export const newPlayerCommand: SlashCommand = {
   ],
 };
 
-export function registerNewPlayerCommand(client: Client, guildId: string) {
-  registerCommand(client, guildId, newPlayerCommand);
+export async function registerNewPlayerCommand(client: Client, guildId: string) {
+  return registerCommand(client, guildId, newPlayerCommand);
 }
