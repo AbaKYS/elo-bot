@@ -27,11 +27,11 @@ export async function registerNewPlayerCommand(
 
 export const newPlayerCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
-    const playerName = interaction.data?.options?.[0].value;
+    const playerName = interaction.data?.options?.[0].value as string;
     if (playerName) {
-      api.newPlayer(playerName);
+      api.newPlayer({ name: playerName });
       return { content: `Player ${playerName} has been added` };
     }
-    return { content: "No name found, now kys" };
+    return { content: "Connot add the name at this time, now kys" };
   },
 };
