@@ -1,5 +1,5 @@
 # Build stage
-FROM node:12.13-alpine AS builder
+FROM node:14.16-alpine AS builder
 WORKDIR /tmp/build
 ADD package.json package-lock.json tsconfig.json ./
 ADD src ./src/
@@ -7,7 +7,7 @@ RUN npm ci && npm run build
 
 
 # App stage
-FROM node:12.13-alpine
+FROM node:14.16-alpine
 
 USER root
 WORKDIR /opt/app

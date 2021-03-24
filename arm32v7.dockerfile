@@ -7,7 +7,7 @@ RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . --strip-components 1
 
 
 # Build stage
-FROM arm32v7/node:12-alpine as builder
+FROM arm32v7/node:14-alpine as builder
 # Add QEMU
 COPY --from=qemu qemu-arm-static /usr/bin
 
@@ -18,7 +18,7 @@ RUN npm ci && npm run build
 
 
 # App stage
-FROM arm32v7/node:12-alpine
+FROM arm32v7/node:14-alpine
 # Add QEMU
 COPY --from=qemu qemu-arm-static /usr/bin
 
