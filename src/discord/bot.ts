@@ -142,8 +142,9 @@ export class Bot {
       //new Discord.WebhookClient(client.user.id, interaction.token).send('hello world')
     } catch (err) {
       log.error(
-        { interaction },
-        "Failed to get response for command %s",
+        { err, interaction },
+        "Failed to get response for command %s (%s)",
+        commandName,
         interaction.id
       );
     }
