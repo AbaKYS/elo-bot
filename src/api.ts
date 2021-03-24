@@ -66,9 +66,13 @@ const api = {
     return players.find().sort({ elo: -1 }).toArray();
   },
 
-  async getHistory(): Promise<HistoryWithoutId[]> {
+  async getHistory(limit = 0): Promise<HistoryWithoutId[]> {
     const history = await getCollection<History>("history");
-    const documents = await history.find().toArray();
+    const documents = await history
+      .find()
+      .sort(SortDescending)
+      .limit(limit)
+      .toArray();
     return documents.map((doc) => {
       delete (doc as any)._id;
       return doc;

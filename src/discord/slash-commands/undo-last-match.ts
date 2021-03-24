@@ -4,6 +4,7 @@ import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
+import { joinNames } from "./util/join-names";
 
 const log = logger("statsCommand");
 
@@ -24,8 +25,8 @@ export const undoLastMatchHandler: SlashCommandListener = {
     try {
       const lastGame = await api.undoLastGame();
 
-      const winners = lastGame.winners.map((winner) => winner.name).join(", ");
-      const losers = lastGame.losers.map((loser) => loser.name).join(", ");
+      const winners = joinNames(lastGame.winners);
+      const losers = joinNames(lastGame.losers);
       return {
         content: `A match where ${winners} won over ${losers} has been deleted`,
       };

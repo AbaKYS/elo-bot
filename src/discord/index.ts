@@ -2,6 +2,10 @@ import logging from "../logging";
 import { Bot } from "./bot";
 import { getUrl } from "./invite-url";
 import {
+  historyCommand,
+  historyCommandHandler,
+} from "./slash-commands/history";
+import {
   newMatchCommand,
   newMatchCommandHandler,
 } from "./slash-commands/new-match";
@@ -30,6 +34,7 @@ export async function startBot() {
   bot.addHandler(undoLastMatchCommand, undoLastMatchHandler);
   bot.addHandler(newMatchCommand, newMatchCommandHandler);
   bot.addHandler(statsCommand, statsCommandHandler);
+  bot.addHandler(historyCommand, historyCommandHandler);
 
   await bot.start();
 }

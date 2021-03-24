@@ -5,6 +5,7 @@ import { registerNewMatchCommand } from "./new-match";
 import { registerNewPlayerCommand } from "./new-player-command";
 import { registerStatsCommand } from "./stats";
 import { registerUndoLastMatchCommand } from "./undo-last-match";
+import { registerHistoryCommand } from "./history";
 
 export function registerAll() {
   const log = logging("registerAll");
@@ -25,6 +26,8 @@ export function registerAll() {
           log.info({ guildId }, "Registered newMatchCommand");
           await registerStatsCommand(client, guildId);
           log.info({ guildId }, "Registered statsCommand");
+          await registerHistoryCommand(client, guildId);
+          log.info({ guildId }, "Registered historyCommand");
         } catch (err) {
           log.error(
             { err },
