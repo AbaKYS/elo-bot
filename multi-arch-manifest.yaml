@@ -1,0 +1,11 @@
+image: krissrex/discord-elo-bot:latest
+manifests:
+  - image: krissrex/discord-elo-bot:amd64
+    platform:
+      architecture: amd64
+      os: linux
+  - image: krissrex/discord-elo-bot:arm32v7
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
