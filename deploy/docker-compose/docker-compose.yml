@@ -24,7 +24,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: kys
   elo-bot:
-    image: krissrex/elo-bot
+    image: krissrex/discord-elo-bot
     depends_on:
       - mongo
     links:
