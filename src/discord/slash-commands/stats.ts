@@ -36,9 +36,9 @@ export const statsCommandHandler: SlashCommandListener = {
         const content = allPlayers
           .map(
             (player, index) =>
-              `On ${index + 1}. we find ${player.name}, with an elo of ${
-                player.elo
-              }.`
+              `On **${index + 1}**. we find **${
+                player.name
+              }**, with an elo of **${player.elo}**.`
           )
           .join("\n");
         return {
@@ -64,15 +64,23 @@ export const statsCommandHandler: SlashCommandListener = {
         );
         return {
           content:
-            `Total amount of games played ${stats.gamesPlayed}: \n` +
+            `Total amount of games played: **${stats.gamesPlayed}** \n` +
             `----------------------- \n` +
-            `The one with highest elo of all times is ${stats.highestElo?.name} with an elo of ${stats.highestElo?.elo} on the ${stats.highestElo?.time.toLocaleDateString}  \n` +
+            `The one with highest elo of all times is **${
+              stats.highestElo?.name
+            }** with an elo of **${
+              stats.highestElo?.elo
+            }** on the \`${stats.highestElo?.time.toLocaleDateString()}\`  \n` +
             `----------------------- \n` +
-            `The one with the lowest elo of all times is ${stats.lowestElo?.name} with an elo of ${stats.lowestElo?.elo} on the ${stats.lowestElo?.time.toLocaleDateString} \n` +
+            `The one with the lowest elo of all times is **${
+              stats.lowestElo?.name
+            }** with an elo of **${
+              stats.lowestElo?.elo
+            }** on the \`${stats.lowestElo?.time.toLocaleDateString()}\` \n` +
             `----------------------- \n` +
-            `The biggest upset was ${winnerNames} vs ${loserNames} where ${winnerNames} won against ${loserNames}. ` +
-            `The elo difference was ${stats.biggestUpset?.eloDifference} and ${winnerNames} had a ${probability}% chance to win. ` +
-            `This happened on the ${stats.biggestUpset?.time.toLocaleDateString} \n` +
+            `The biggest upset was **${winnerNames}** vs **${loserNames}** where **${winnerNames}** won against **${loserNames}**. ` +
+            `The elo difference was **${stats.biggestUpset?.eloDifference}** and **${winnerNames}** had a **${probability}%** chance to win. ` +
+            `This happened on the \`${stats.biggestUpset?.time.toLocaleDateString()}\` \n` +
             `----------------------- \n`,
         };
       } catch (err) {
@@ -85,9 +93,9 @@ export const statsCommandHandler: SlashCommandListener = {
       const profile = await api.getPlayerProfile(playerName);
       if (profile) {
         return {
-          content: `${profile.name}'s elo is ${
+          content: `**${profile.name}'s** elo is **${
             profile.elo
-          }, and the last activity was ${profile.lastActivity.toLocaleString()}`,
+          }**, and the last activity was \`${profile.lastActivity.toLocaleString()}\``,
         };
       } else {
         return { content: "Failed to find player " + playerName };

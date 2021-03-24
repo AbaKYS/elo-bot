@@ -34,7 +34,7 @@ export const newPlayerCommandHandler: SlashCommandListener = {
     if (playerName) {
       try {
         await api.newPlayer({ name: playerName });
-        return { content: `Player ${playerName} has been added.` };
+        return { content: `Player **${playerName}** has been added.` };
       } catch (err) {
         log.error({ err }, "Failed to register name: %s", err.message);
         return { content: "Failed to register the name: " + err.message };
