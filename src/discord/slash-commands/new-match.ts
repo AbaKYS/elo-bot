@@ -9,19 +9,19 @@ import { registerUndoLastMatchCommand } from "./undo-last-match";
 const log = logger("new-match");
 
 export const newMatchCommand: SlashCommand = {
-  name: "registerMatch",
+  name: "registermatch",
   description: "Registers a match, winner first and loser last",
   options: [
     {
       type: 3,
-      name: "WinnerName",
+      name: "winnername",
       description: "Type in playername of the winner",
       default: false,
       required: true,
     },
     {
       type: 3,
-      name: "LoserName",
+      name: "losername",
       description: "Type in the playername of the loser",
       default: false,
       required: true,
@@ -36,10 +36,10 @@ export async function registerNewMatchCommand(client: Client, guildId: string) {
 export const newMatchCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
     const winner = interaction.data?.options?.find(
-      (option) => option.name === "WinnerName"
+      (option) => option.name === "winnername"
     )?.value;
     const loser = interaction.data?.options?.find(
-      (option) => option.name === "LoserName"
+      (option) => option.name === "losername"
     )?.value;
 
     if (!loser || !winner) {

@@ -8,7 +8,7 @@ import logger from "../../logging";
 const log = logger("statsCommand");
 
 export const undoLastMatchCommand: SlashCommand = {
-  name: "undoMatch",
+  name: "undomatch",
   description: "Removes last match",
 };
 
