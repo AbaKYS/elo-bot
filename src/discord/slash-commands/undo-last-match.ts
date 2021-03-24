@@ -22,8 +22,13 @@ export async function registerUndoLastMatchCommand(
 export const undoLastMatchHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
     try {
-      await api.undoLastGame();
-      return { content: "Last match deleted." };
+      const lastGame = await api.undoLastGame();
+
+      const winners = lastGame.winners.map((winner) => winner.name).join(", ");
+      const losers = lastGame.losers.map((loser) => loser.name).join(", ");
+      return {
+        content: `A match where ${winners} won over ${losers} has been deleted`,
+      };
     } catch (err) {
       log.error({ err }, "Failed to register name: %s", err.message);
       return { content: "Failed to register the game: " + err.message };

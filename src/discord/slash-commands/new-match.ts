@@ -37,7 +37,7 @@ export const newMatchCommandHandler: SlashCommandListener = {
     const winner = interaction.data?.options?.find(
       (option) => option.name === "winnername"
     )?.value;
-    const loser = interaction.data?.options?.find(
+    const loser: string = interaction.data?.options?.find(
       (option) => option.name === "losername"
     )?.value;
 
@@ -49,7 +49,9 @@ export const newMatchCommandHandler: SlashCommandListener = {
 
     try {
       api.resolveGame({ winner, loser });
-      return { content: `Congratulations ${winner}! And to ${loser}: kys` };
+      return {
+        content: `Congratulations ${winner}! ${loser} you can just go and kys`,
+      };
     } catch (err) {
       log.error({ err }, "Failed to register game: %s", err.message);
       return { content: "Failed to register the game: " + err.message };

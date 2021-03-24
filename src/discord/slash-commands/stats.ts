@@ -53,16 +53,26 @@ export const statsCommandHandler: SlashCommandListener = {
     if (playerName == "general") {
       try {
         const stats = await api.stats();
+        const winnerNames = stats.biggestUpset?.winners
+          .map((winner) => winner.name)
+          .join(", ");
+        const loserNames = stats.biggestUpset?.losers
+          .map((loser) => loser.name)
+          .join(", ");
+        const probability = Math.round(
+          100 * (stats.biggestUpset?.probability ?? 0)
+        );
         return {
           content:
-            `Total amount of games played ${stats.gamesPlayed} \n` +
+            `Total amount of games played ${stats.gamesPlayed}: \n` +
             `----------------------- \n` +
-            `The one with highest elo of all times is ${stats.highestElo?.name} with an elo of ${stats.highestElo?.elo} on the ${stats.highestElo?.time}  \n` +
+            `The one with highest elo of all times is ${stats.highestElo?.name} with an elo of ${stats.highestElo?.elo} on the ${stats.highestElo?.time.toLocaleDateString}  \n` +
             `----------------------- \n` +
-            `The one with the lowest elo of all times is ${stats.lowestElo?.name} with an elo of ${stats.lowestElo?.elo} on the ${stats.lowestElo?.time} \n` +
+            `The one with the lowest elo of all times is ${stats.lowestElo?.name} with an elo of ${stats.lowestElo?.elo} on the ${stats.lowestElo?.time.toLocaleDateString} \n` +
             `----------------------- \n` +
-            `The biggest upset was ${stats.biggestUpset?.winners} vs ${stats.biggestUpset?.losers} where ${stats.biggestUpset?.winners} won against ${stats.biggestUpset?.losers}. The elo difference was ${stats.biggestUpset?.eloDifference} and ${stats.biggestUpset?.winners} had a ${stats.biggestUpset?.probability} ` +
-            `probability to win. This happened on the ${stats.biggestUpset?.time} \n` +
+            `The biggest upset was ${winnerNames} vs ${loserNames} where ${winnerNames} won against ${loserNames}. ` +
+            `The elo difference was ${stats.biggestUpset?.eloDifference} and ${winnerNames} had a ${probability}% chance to win. ` +
+            `This happened on the ${stats.biggestUpset?.time.toLocaleDateString} \n` +
             `----------------------- \n`,
         };
       } catch (err) {
