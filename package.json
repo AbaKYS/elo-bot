@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node out/index.js",
+    "cli": "node out/cli.js",
     "test": "mocha"
   },
   "keywords": [],

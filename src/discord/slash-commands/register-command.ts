@@ -32,17 +32,17 @@ export interface SlashCommand {
  * @param guildId the guild to register commands in. Global commands are cached for an hour
  * @param slashCommand
  */
-export function registerCommand(
+export async function registerCommand(
   client: Client,
   guildId: string,
   slashCommand: SlashCommand
 ) {
-  const clientId = client.user?.id || "";
+  const clientId = client.user?.id || process.env.DISCORD_BOT_CLIENT_ID || "";
 
-  (client as any).api
-    .applications(clientId)
-    .guilds(guildId)
-    .commands.post({ data: slashCommand }); //Update command with patch
+  const guild = (client as any).api
+  .applications(clientId)
+  .guilds(guildId);
+  const result = await guild.commands.post({ data: slashCommand }); //Update command with patch
 }
 
 enum InteractionType {

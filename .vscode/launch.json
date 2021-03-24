@@ -1,0 +1,42 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\out\\index.js",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ]
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Launch Cli",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\out\\cli.js",
+      "args": ["${input:cliOption}"],
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cliOption",
+      "description": "Pick a cli action",
+      "type": "pickString",
+      "options": ["registerCommands", "testDiscord", "listGuilds"],
+      "default": "registerCommands"
+    }
+  ]
+}
