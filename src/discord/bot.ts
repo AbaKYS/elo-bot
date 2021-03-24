@@ -97,7 +97,16 @@ export class Bot {
 
   /** Interactions are also known as slash commands. */
   private async handleInteractions(interaction: Interaction) {
-    const handler = this.slashCommandHandlers.get(interaction.id);
+    const commandName = interaction.data?.name;
+    if (!commandName) {
+      log.warn(
+        { interaction },
+        "No command name found in interaction %s",
+        interaction.id
+      );
+      return;
+    }
+    const handler = this.slashCommandHandlers.get(commandName);
 
     if (!handler) {
       log.warn(
