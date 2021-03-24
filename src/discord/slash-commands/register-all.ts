@@ -1,10 +1,10 @@
 import { Client } from "discord.js";
-import { activeGuilds } from "../guilds";
-import { registerNewPlayerCommand } from "./new-player-command";
 import logging from "../../logging";
-import { registerUndoLastMatchCommand } from "./undo-last-match";
-import { newMatchCommand, registerNewMatchCommand } from "./new-match";
+import { activeGuilds } from "../guilds";
+import { registerNewMatchCommand } from "./new-match";
+import { registerNewPlayerCommand } from "./new-player-command";
 import { registerStatsCommand } from "./stats";
+import { registerUndoLastMatchCommand } from "./undo-last-match";
 
 export function registerAll() {
   const log = logging("registerAll");

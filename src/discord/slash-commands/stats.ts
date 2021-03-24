@@ -1,9 +1,9 @@
 import { Client } from "discord.js";
 import api from "../../api";
+import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
-import logger from "../../logging";
 
 const log = logger("statsCommand");
 

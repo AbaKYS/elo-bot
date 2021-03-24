@@ -4,7 +4,6 @@ import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
-import { registerUndoLastMatchCommand } from "./undo-last-match";
 
 const log = logger("new-match");
 
