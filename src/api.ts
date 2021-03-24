@@ -53,12 +53,12 @@ const api = {
    *
    * @returns All players sorted by elo first
    */
-  getRankings: async function () {
+  async getRankings() {
     const players = await getCollection<Player>("players");
     return players.find().sort({ elo: -1 }).toArray();
   },
 
-  getHistory: async function (): Promise<Exclude<History, "_id">[]> {
+  async getHistory(): Promise<Exclude<History, "_id">[]> {
     const history = await getCollection<History>("history");
     const documents = await history.find().toArray();
     return documents.map((doc) => {
@@ -67,7 +67,7 @@ const api = {
     });
   },
 
-  newPlayer: async function (query: NewPlayerQuery) {
+  async newPlayer(query: NewPlayerQuery) {
     const valid = ajv.validate(
       {
         type: "object",
@@ -101,12 +101,12 @@ const api = {
     };
   },
 
-  getPlayerProfile: async function (playerName: PlayerName) {
+  async getPlayerProfile(playerName: PlayerName) {
     const players = await getCollection<Player>("players");
     return players.findOne({ name: playerName });
   },
 
-  resolveGame: async function (query: GameQuery) {
+  async resolveGame(query: GameQuery) {
     const valid = ajv.validate(
       {
         type: "object",
@@ -137,7 +137,7 @@ const api = {
     };
   },
 
-  resolveGameNvN: async function (query: GameNvNQuery) {
+  async resolveGameNvN(query: GameNvNQuery) {
     const valid = ajv.validate(
       {
         type: "object",
@@ -241,7 +241,7 @@ const api = {
     };
   },
 
-  undoLastGame: async function () {
+  async undoLastGame() {
     const history = await getCollection<History>("history");
     const players = await getCollection<Player>("players");
     const lastGame = await history.findOne({}, { sort: { time: -1 } });
@@ -298,7 +298,7 @@ const api = {
     };
   },
 
-  stats: async function () {
+  async stats() {
     const history = await getCollection<History>("history");
     const allHistory = await history.find().toArray();
 
