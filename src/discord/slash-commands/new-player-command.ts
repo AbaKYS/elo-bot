@@ -1,4 +1,5 @@
 import { Client } from "discord.js";
+import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
 
@@ -22,3 +23,9 @@ export async function registerNewPlayerCommand(
 ) {
   return registerCommand(client, guildId, newPlayerCommand);
 }
+
+export const newPlayerCommandHandler: SlashCommandListener = {
+  async onCommand(client, interaction) {
+    return { content: "Testing" };
+  },
+};
