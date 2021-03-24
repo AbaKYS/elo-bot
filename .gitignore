@@ -4,5 +4,4 @@ config.json
 npm-debug.log
 out/
 
-.env*
-!.env.example
+.env.*.local
