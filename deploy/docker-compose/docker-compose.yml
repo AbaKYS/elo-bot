@@ -33,6 +33,3 @@ services:
       # Modify the values in the .env file
       DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
       MONGO_URI: ${MONGO_URI}
-
-volumes:
-  db:
