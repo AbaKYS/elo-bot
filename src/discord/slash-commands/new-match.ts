@@ -47,8 +47,11 @@ export const newMatchCommandHandler: SlashCommandListener = {
 
     try {
       const matchStats = await api.resolveGame({ winner, loser });
+      const probability = Math.round(100 * (matchStats.probability ?? 0));
       return {
-        content: `Congratulations **${winner}** you gained **${matchStats.deltaElo}** elo! **${loser}** you can just go and kys`,
+        content:
+          `Congratulations **${winner}** you gained **${matchStats.deltaElo}** elo and **${winner}** had a **${matchStats.probability}%** to win and now has a elo of ${matchStats.winner.elo}!` +
+          ` **${loser}** you can just go and kys with a trash elo of ${matchStats.loser.elo}`,
       };
     } catch (err) {
       log.error({ err }, "Failed to register game: %s", err.message);
