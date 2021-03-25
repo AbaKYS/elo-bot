@@ -18,6 +18,10 @@ import {
   undoLastMatchCommand,
   undoLastMatchHandler,
 } from "./slash-commands/undo-last-match";
+import {
+  winChanceCommand,
+  winChanceHandler,
+} from "./slash-commands/win-chance";
 
 const log = logging("discord");
 
@@ -35,6 +39,7 @@ export async function startBot() {
   bot.addHandler(newMatchCommand, newMatchCommandHandler);
   bot.addHandler(statsCommand, statsCommandHandler);
   bot.addHandler(historyCommand, historyCommandHandler);
+  bot.addHandler(winChanceCommand, winChanceHandler);
 
   await bot.start();
 }

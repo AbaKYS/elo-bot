@@ -136,6 +136,18 @@ const api = {
     return players.findOne({ name: playerName });
   },
 
+  async getWinChanceBetweenTwoPlayers(
+    playerOne: PlayerName,
+    playerTwo: PlayerName
+  ) {
+    const profileOne = await this.getPlayerProfile(playerOne);
+    const profileTwo = await this.getPlayerProfile(playerTwo);
+    if (!profileTwo || !profileOne) {
+      throw new Error("Couldn't find one player");
+    }
+    return 1 - elo(profileOne?.elo, profileTwo?.elo, 1);
+  },
+
   async resolveGame(query: GameQuery) {
     const valid = ajv.validate(
       {

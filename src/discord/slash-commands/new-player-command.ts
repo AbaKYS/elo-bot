@@ -5,7 +5,7 @@ import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
 
-const log = logger("statsCommand");
+const log = logger("newPlayerCommand");
 
 export const newPlayerCommand: SlashCommand = {
   name: "newplayer",
