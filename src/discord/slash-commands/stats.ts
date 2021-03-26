@@ -70,6 +70,9 @@ export const statsCommandHandler: SlashCommandListener = {
     // A specific player
     try {
       const profile = await api.getPlayerProfile(playerName);
+      const playerRank = (await api.getRankings())
+        .map((player, index) => ({rank: index + 1, player}))
+        .find(({player}) => player.name === profile?.name)?.rank;
       const historyForPlayer = await api.getHistoryForPlayer(playerName, 0);
       const totalAmountOfGamesPlayed = historyForPlayer.length;
       const totalAmountOfLosses = historyForPlayer.filter((h) =>
@@ -77,13 +80,13 @@ export const statsCommandHandler: SlashCommandListener = {
       ).length;
       const totalAmountOfWins = totalAmountOfGamesPlayed - totalAmountOfLosses;
       if (profile && historyForPlayer) {
-        return {
-          content: `**${profile.name}'s** elo is **${profile.elo}**. **${
-            profile.name
-          }** has played **${totalAmountOfGamesPlayed}** matches and has won **${totalAmountOfWins}** and lost **${totalAmountOfLosses}**. **${
-            profile.name
-          }** last activity was \`${profile.lastActivity.toLocaleString()}\``,
-        };
+        const embed = new MessageEmbed()
+          .setTitle(`Statistics: ${profile.name}`)
+          .addField("Ranking", `Current elo is **${profile.elo}**.\nRanked as player **#${playerRank}** on the leaderboard.`)
+          .addField("\u200b", `**${profile.name}** has played **${totalAmountOfGamesPlayed}** matches and has won **${totalAmountOfWins}** and lost **${totalAmountOfLosses}**.
+          Last activity was \`${profile.lastActivity.toLocaleString()}\``)
+          .setTimestamp(Date.now())
+        return { embeds: [embed]};
       } else {
         return { content: "Failed to find player " + playerName };
       }
