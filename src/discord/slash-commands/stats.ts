@@ -89,11 +89,19 @@ export const statsCommandHandler: SlashCommandListener = {
     // A specific player
     try {
       const profile = await api.getPlayerProfile(playerName);
-      if (profile) {
+      const historyForPlayer = await api.getHistoryForPlayer(playerName, 0);
+      const totalAmountOfGamesPlayed = historyForPlayer.length;
+      const totalAmountOfLosses = historyForPlayer.filter((h) =>
+        h.losers.some((p) => p === playerName)
+      ).length;
+      const totalAmountOfWins = totalAmountOfGamesPlayed - totalAmountOfLosses;
+      if (profile && historyForPlayer) {
         return {
-          content: `**${profile.name}'s** elo is **${
-            profile.elo
-          }**, and the last activity was \`${profile.lastActivity.toLocaleString()}\``,
+          content: `**${profile.name}'s** elo is **${profile.elo}**. **${
+            profile.name
+          }** has played **${totalAmountOfGamesPlayed}** matches and has won **${totalAmountOfWins}** and lost **${totalAmountOfLosses}**. **${
+            profile.name
+          }** last activity was \`${profile.lastActivity.toLocaleString()}\``,
         };
       } else {
         return { content: "Failed to find player " + playerName };

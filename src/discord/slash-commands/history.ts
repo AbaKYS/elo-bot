@@ -39,10 +39,13 @@ export const historyCommandHandler: SlashCommandListener = {
   async onCommand(client, interaction) {
     const options = interaction.data?.options;
     const playerName = find<string>("name", options);
-    const amountOfGames = find<number>("amount", options);
+    let amountOfGames = find<number>("amount", options);
 
     try {
       let histories;
+      if (amountOfGames == 0) {
+        amountOfGames = 10;
+      }
       if (playerName) {
         // History for a specific player
         histories = await api.getHistoryForPlayer(playerName, amountOfGames);
