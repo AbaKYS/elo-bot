@@ -3,7 +3,7 @@ import api from "../../api";
 import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
-import { SlashCommand } from "./api/SlashCommand";
+import { SlashCommand, SlashCommandChoice } from "./api/SlashCommand";
 import { find } from "./util/find-option";
 
 const log = logger("new-match");
@@ -59,3 +59,20 @@ export const newMatchCommandHandler: SlashCommandListener = {
     }
   },
 };
+
+export async function createDynamicNewMatchCommand(): Promise<SlashCommand> {
+  if (!newMatchCommand.options) {
+    throw new Error(
+      "The underlying command has changed! Please update this method"
+    );
+  }
+
+  const players: string[] = await api.getPlayerNames();
+  const playerChoices: SlashCommandChoice[] = players.map((player) => ({
+    name: player,
+    value: player,
+  }));
+  newMatchCommand.options[0].choices = playerChoices;
+  newMatchCommand.options[1].choices = playerChoices;
+  return newMatchCommand;
+}
