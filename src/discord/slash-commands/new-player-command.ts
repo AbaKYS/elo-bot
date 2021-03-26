@@ -1,6 +1,7 @@
 import { Client } from "discord.js";
 import api from "../../api";
 import logger from "../../logging";
+import { events } from "../bot";
 import { SlashCommandListener } from "./api/listen-to-commands";
 import { registerCommand } from "./api/register-command";
 import { SlashCommand } from "./api/SlashCommand";
@@ -34,6 +35,7 @@ export const newPlayerCommandHandler: SlashCommandListener = {
     if (playerName) {
       try {
         await api.newPlayer({ name: playerName });
+        events.emit("newPlayer");
         return { content: `Player **${playerName}** has been added.` };
       } catch (err) {
         log.error({ err }, "Failed to register name: %s", err.message);

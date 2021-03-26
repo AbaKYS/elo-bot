@@ -1,6 +1,12 @@
+import api from "../api";
 import logging from "../logging";
 import { Bot } from "./bot";
 import { getUrl } from "./invite-url";
+import { registerCommand } from "./slash-commands/api/register-command";
+import {
+  SlashCommand,
+  SlashCommandChoice,
+} from "./slash-commands/api/SlashCommand";
 import {
   historyCommand,
   historyCommandHandler,
@@ -41,5 +47,25 @@ export async function startBot() {
   bot.addHandler(historyCommand, historyCommandHandler);
   bot.addHandler(winChanceCommand, winChanceHandler);
 
+  bot.addDynamicCommand("start", createDynamicNewMatchCommand);
+  bot.addDynamicCommand("newPlayer", createDynamicNewMatchCommand);
+
   await bot.start();
+}
+
+async function createDynamicNewMatchCommand(): Promise<SlashCommand> {
+  if (!newMatchCommand.options) {
+    throw new Error(
+      "The underlying command has changed! Please update this method"
+    );
+  }
+
+  const players: string[] = await api.getPlayerNames();
+  const playerChoices: SlashCommandChoice[] = players.map((player) => ({
+    name: player,
+    value: player,
+  }));
+  newMatchCommand.options[0].choices = playerChoices;
+  newMatchCommand.options[1].choices = playerChoices;
+  return newMatchCommand;
 }

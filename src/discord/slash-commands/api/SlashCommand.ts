@@ -1,5 +1,10 @@
 export type SlashCommandName = string;
 
+export interface SlashCommandChoice {
+  name: string;
+  value: string | number;
+}
+
 export interface SlashCommandOption {
   type: 3 | number;
   /** Option name. No spaces. Must be lowercase */
@@ -7,7 +12,11 @@ export interface SlashCommandOption {
   /** Human readable description */
   description: string;
   default: boolean;
-  required: boolean;
+  required?: boolean;
+  /** Only for subcommand type */
+  options?: SlashCommandOption[];
+  /** Only for int and string type */
+  choices?: SlashCommandChoice[];
 }
 
 export interface SlashCommand {
@@ -17,3 +26,8 @@ export interface SlashCommand {
   description: string;
   options?: SlashCommandOption[];
 }
+
+/**
+ * For {@link SlashCommand.name} and {@link SlashCommandOption.name}
+ */
+export const nameRegex = /^[\w-]{1,32}$/;

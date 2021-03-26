@@ -66,6 +66,11 @@ const api = {
     return players.find().sort({ elo: SortDescending }).toArray();
   },
 
+  async getPlayerNames() {
+    const players = await getCollection<Player>("players");
+    return (await players.find().toArray()).map((player) => player.name);
+  },
+
   async getHistory(limit = 20): Promise<HistoryWithoutId[]> {
     const history = await getCollection<History>("history");
     const documents = await history

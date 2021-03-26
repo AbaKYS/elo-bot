@@ -1,5 +1,6 @@
 import discord from "discord.js";
 import logging from "../logging";
+import { TinyEmitter } from "tiny-emitter";
 import {
   Interaction,
   SlashCommandListener,
@@ -8,6 +9,8 @@ import {
   SlashCommand,
   SlashCommandName,
 } from "./slash-commands/api/SlashCommand";
+import { registerCommand } from "./slash-commands/api/register-command";
+import { activeGuilds } from "./guilds";
 
 const log = logging("bot");
 
@@ -19,6 +22,11 @@ export interface DiscordMessageHandler {
   handle(message: discord.Message): void;
 }
 
+export type SlashCommandCreator = () => Promise<SlashCommand>;
+export type Event = string;
+
+export const events = new TinyEmitter();
+
 export class Bot {
   public client: discord.Client;
   options: BotOptions;
@@ -29,6 +37,7 @@ export class Bot {
     SlashCommandName,
     SlashCommandListener
   > = new Map();
+  private slashCommandCreators: Map<Event, SlashCommandCreator[]> = new Map();
 
   constructor(options: BotOptions = {}) {
     this.client = new discord.Client();
@@ -36,6 +45,24 @@ export class Bot {
 
     this.options.token = this.options.token || process.env.DISCORD_BOT_TOKEN;
   }
+
+  /**
+   * @param event when the command should be re-registered
+   * @param createSlashCommand the function that creates the new slash command
+   */
+  public addDynamicCommand(
+    event: string,
+    createSlashCommand: SlashCommandCreator
+  ) {
+    let creators = this.slashCommandCreators.get(event);
+    if (!creators) {
+      creators = [];
+    }
+    creators.push(createSlashCommand);
+    this.slashCommandCreators.set(event, creators);
+  }
+
+  // TODO: get an even for when new players are added, and re-run the createSlashCommand.
 
   public addHandler(
     slashCommand: SlashCommand,
@@ -81,7 +108,26 @@ export class Bot {
       this.client.user?.setActivity("!help", {
         type: "WATCHING",
       });
+
+      this.listenToCustomEvents();
+      events.emit("start");
     });
+  }
+
+  private listenToCustomEvents() {
+    const eventNames = this.slashCommandCreators.keys();
+    for (const ev of eventNames) {
+      const guilds = activeGuilds();
+
+      events.on(ev, async () => {
+        const handlers = this.slashCommandCreators.get(ev) ?? [];
+        for (const handler of handlers) {
+          for (const guild of guilds) {
+            registerCommand(this.client, guild, await handler());
+          }
+        }
+      });
+    }
   }
 
   private listenToMessages() {

@@ -33,7 +33,8 @@
     "express": "^4.16.4",
     "mongodb": "^2.1.7",
     "pino": "^6.11.2",
-    "pino-pretty": "^4.7.1"
+    "pino-pretty": "^4.7.1",
+    "tiny-emitter": "^2.1.0"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
