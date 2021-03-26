@@ -50,8 +50,8 @@ export const newMatchCommandHandler: SlashCommandListener = {
       const probability = Math.round(100 * (matchStats.probability ?? 0));
       return {
         content:
-          `Congratulations **${winner}** you gained **${matchStats.deltaElo}** elo and **${winner}** had a **${probability}%** to win and now has a elo of ${matchStats.winner.elo}!` +
-          ` **${loser}** you can just go and kys with a trash elo of ${matchStats.loser.elo}`,
+          `Congratulations **${winner}** you gained **${matchStats.deltaElo}** elo with a **${probability}%** to win and you now have an elo of **${matchStats.winner.elo}**!` +
+          ` **${loser}** you can just go and kys with a trash elo of **${matchStats.loser.elo}**.`,
       };
     } catch (err) {
       log.error({ err }, "Failed to register game: %s", err.message);

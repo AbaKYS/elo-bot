@@ -51,15 +51,18 @@ export class Bot {
    * @param createSlashCommand the function that creates the new slash command
    */
   public addDynamicCommand(
-    event: string,
+    event: string|string[],
     createSlashCommand: SlashCommandCreator
   ) {
-    let creators = this.slashCommandCreators.get(event);
-    if (!creators) {
-      creators = [];
+    const events = Array.isArray(event) ? event : [event];
+    for (let e of events) {
+      let creators = this.slashCommandCreators.get(e);
+      if (!creators) {
+        creators = [];
+      }
+      creators.push(createSlashCommand);
+      this.slashCommandCreators.set(e, creators);
     }
-    creators.push(createSlashCommand);
-    this.slashCommandCreators.set(event, creators);
   }
 
   // TODO: get an even for when new players are added, and re-run the createSlashCommand.

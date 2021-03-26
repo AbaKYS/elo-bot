@@ -1,12 +1,6 @@
-import api from "../api";
 import logging from "../logging";
 import { Bot } from "./bot";
 import { getOauthUrl, getUrl } from "./invite-url";
-import {
-  SlashCommand,
-  SlashCommandChoice,
-} from "./slash-commands/api/SlashCommand";
-import { createDynamicNewMatchCommand } from "./slash-commands/new-match";
 import {
   historyCommand,
   historyCommandHandler,
@@ -26,8 +20,9 @@ import {
 } from "./slash-commands/undo-last-match";
 import {
   winChanceCommand,
-  winChanceHandler,
+  winChanceHandler
 } from "./slash-commands/win-chance";
+import { createDynamicPlayerCommand } from "./slash-commands/util/create-dynamic-player-command";
 
 const log = logging("discord");
 
@@ -51,8 +46,22 @@ export async function startBot() {
   bot.addHandler(historyCommand, historyCommandHandler);
   bot.addHandler(winChanceCommand, winChanceHandler);
 
-  bot.addDynamicCommand("start", createDynamicNewMatchCommand);
-  bot.addDynamicCommand("newPlayer", createDynamicNewMatchCommand);
+  bot.addDynamicCommand(["start", "newPlayer"], createDynamicPlayerCommand(historyCommand, ((cmd, p) => {
+    cmd.options[0].choices = p;
+    // cmd.options[1].choices = [{name: '1', value: 1}, {name: '2', value: 2}];
+  })));
+  bot.addDynamicCommand(["start", "newPlayer"], createDynamicPlayerCommand(newMatchCommand, ((cmd, p) => {
+    cmd.options[0].choices = p;
+    cmd.options[1].choices = p;
+  })));
+  bot.addDynamicCommand(["start", "newPlayer"], createDynamicPlayerCommand(winChanceCommand, ((cmd, p) => {
+    cmd.options[0].choices = p;
+    cmd.options[1].choices = p;
+  })));
+
+  bot.addDynamicCommand(["start", "newPlayer"], createDynamicPlayerCommand(statsCommand, (cmd, p) => {
+    cmd.options[0].choices = p;
+  }));
 
   await bot.start();
 }

@@ -62,7 +62,11 @@ export const historyCommandHandler: SlashCommandListener = {
       const embed = new MessageEmbed()
         .setTitle('History')
         .setDescription(`Latest ${amountOfGames} games for ${playerName ? playerName : 'all players'}.`)
-        .addField('\u200b', '\u200b')
+        .addField('\u200b', '\u200b');
+      if (histories.length === 0){
+        embed.addField("No matches found.", "\u200b");
+      } else {
+        embed
         .addFields(histories.map(({winners, losers, time, deltaElo}) =>
           ({
             name: `${time.toLocaleString('nb')}`,
@@ -70,19 +74,8 @@ export const historyCommandHandler: SlashCommandListener = {
             inline: false
           })
         ));
-      const content =
-        histories
-          .map(
-            ({ winners, losers, time, deltaElo }) =>
-              `\`${time.toLocaleString()}\` - **${joinStrings(
-                winners
-              )}** beat **${joinStrings(
-                losers
-              )}** and gained **${deltaElo}** elo.`
-          )
-          .join(`\n`) || "No matches found";
+      }
       return { embeds: [embed]};
-      // return { embeds: [embed], content: 'content'};
     } catch (err) {
       log.error({ err }, "Failed to fetch history: %s", err.message);
       return { content: "Failed to fetch history: " + err.message };
