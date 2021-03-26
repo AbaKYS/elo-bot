@@ -1,8 +1,7 @@
 import api from "../api";
 import logging from "../logging";
 import { Bot } from "./bot";
-import { getUrl } from "./invite-url";
-import { registerCommand } from "./slash-commands/api/register-command";
+import { getOauthUrl, getUrl } from "./invite-url";
 import {
   SlashCommand,
   SlashCommandChoice,
@@ -35,7 +34,11 @@ export async function startBot() {
   const bot = new Bot();
 
   const inviteUrl = getUrl();
-  log.info({ inviteUrl }, "Invite the bot by using this link: %s", inviteUrl);
+  log.info(
+    { inviteUrl, oauth: getOauthUrl() },
+    "Invite the bot by using this link: %s",
+    inviteUrl
+  );
 
   // Load handlers here
   log.info("Loaded " + bot.messageHandlers.length + " message handlers");

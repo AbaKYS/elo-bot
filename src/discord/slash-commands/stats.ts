@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, MessageEmbed } from "discord.js";
 import api from "../../api";
 import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
@@ -33,23 +33,9 @@ export const statsCommandHandler: SlashCommandListener = {
     if (!playerName) {
       try {
         const allPlayers = await api.getRankings();
-        const content = allPlayers
-          .map(
-            (player, index) =>
-              `${index + 1}. **${player.name}** with elo **${player.elo}** elo.`
-          )
+        const rankings = allPlayers
+          .map((player, index) => `${index + 1}. **${player.name}** with elo **${player.elo}** elo.`)
           .join("\n");
-        return {
-          content,
-        };
-      } catch (err) {
-        log.error({ err }, "Failed to get players: %s", err.message);
-      }
-      return { content: "Players not found" };
-    }
-
-    if (playerName == "general") {
-      try {
         const stats = await api.stats();
         const winnerNames = stats.biggestUpset?.winners
           .map((winner) => winner.name)
@@ -57,38 +43,36 @@ export const statsCommandHandler: SlashCommandListener = {
         const loserNames = stats.biggestUpset?.losers
           .map((loser) => loser.name)
           .join(", ");
+
         const probability = Math.round(
           100 * (stats.biggestUpset?.probability ?? 0)
         );
+        const embed = new MessageEmbed()
+          .setTitle("Statistics")
+          .addField("Player rankings", rankings)
+          .addField("\u200b", "\u200b")
+          .addField("General stats", `
+          Total amount of games played: **${stats.gamesPlayed}**.
+          The highest elo of all times is **${stats.highestElo?.name}** with an elo of **${stats.highestElo?.elo}** at \`${stats.highestElo?.time.toLocaleDateString('nb')}\`
+          The lowest elo of all times is **${stats.lowestElo?.name}** with an elo of **${stats.lowestElo?.elo}** at \`${stats.lowestElo?.time.toLocaleDateString('nb')}\`
+          The biggest upset was where **${winnerNames}** won against **${loserNames}**. The elo difference was **${stats.biggestUpset?.eloDifference}** and **${winnerNames}** had a **${probability}%** chance to win. This happened on the \`${stats.biggestUpset?.time.toLocaleDateString('nb')}\``)
+          .setTimestamp(new Date())
+
         return {
-          content:
-            `Total amount of games played: **${stats.gamesPlayed}** \n` +
-            `----------------------- \n` +
-            `The one with highest elo of all times is **${
-              stats.highestElo?.name
-            }** with an elo of **${
-              stats.highestElo?.elo
-            }** on the \`${stats.highestElo?.time.toLocaleDateString()}\`  \n` +
-            `----------------------- \n` +
-            `The one with the lowest elo of all times is **${
-              stats.lowestElo?.name
-            }** with an elo of **${
-              stats.lowestElo?.elo
-            }** on the \`${stats.lowestElo?.time.toLocaleDateString()}\` \n` +
-            `----------------------- \n` +
-            `The biggest upset was **${winnerNames}** vs **${loserNames}** where **${winnerNames}** won against **${loserNames}**. ` +
-            `The elo difference was **${stats.biggestUpset?.eloDifference}** and **${winnerNames}** had a **${probability}%** chance to win. ` +
-            `This happened on the \`${stats.biggestUpset?.time.toLocaleDateString()}\` \n` +
-            `----------------------- \n`,
+          embeds: [embed],
         };
       } catch (err) {
-        log.error({ err }, "Failed get stats: %s", err.message);
+        log.error({ err }, "Failed to get players: %s", err.message);
       }
+      return { content: "Players not found" };
     }
 
     // A specific player
     try {
       const profile = await api.getPlayerProfile(playerName);
+      const playerRank = (await api.getRankings())
+        .map((player, index) => ({rank: index + 1, player}))
+        .find(({player}) => player.name === profile?.name)?.rank;
       const historyForPlayer = await api.getHistoryForPlayer(playerName, 0);
       const totalAmountOfGamesPlayed = historyForPlayer.length;
       const totalAmountOfLosses = historyForPlayer.filter((h) =>
@@ -96,13 +80,13 @@ export const statsCommandHandler: SlashCommandListener = {
       ).length;
       const totalAmountOfWins = totalAmountOfGamesPlayed - totalAmountOfLosses;
       if (profile && historyForPlayer) {
-        return {
-          content: `**${profile.name}'s** elo is **${profile.elo}**. **${
-            profile.name
-          }** has played **${totalAmountOfGamesPlayed}** matches and has won **${totalAmountOfWins}** and lost **${totalAmountOfLosses}**. **${
-            profile.name
-          }** last activity was \`${profile.lastActivity.toLocaleString()}\``,
-        };
+        const embed = new MessageEmbed()
+          .setTitle(`Statistics: ${profile.name}`)
+          .addField("Ranking", `Current elo is **${profile.elo}**.\nRanked as player **#${playerRank}** on the leaderboard.`)
+          .addField("\u200b", `**${profile.name}** has played **${totalAmountOfGamesPlayed}** matches and has won **${totalAmountOfWins}** and lost **${totalAmountOfLosses}**.
+          Last activity was \`${profile.lastActivity.toLocaleString()}\``)
+          .setTimestamp(Date.now())
+        return { embeds: [embed]};
       } else {
         return { content: "Failed to find player " + playerName };
       }
