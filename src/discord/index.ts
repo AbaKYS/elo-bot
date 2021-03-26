@@ -1,6 +1,6 @@
 import logging from "../logging";
 import { Bot } from "./bot";
-import { getUrl } from "./invite-url";
+import { getUrl, getOauthUrl } from "./invite-url";
 import {
   historyCommand,
   historyCommandHandler,
@@ -29,7 +29,7 @@ export async function startBot() {
   const bot = new Bot();
 
   const inviteUrl = getUrl();
-  log.info({ inviteUrl }, "Invite the bot by using this link: %s", inviteUrl);
+  log.info({ inviteUrl, oauth: getOauthUrl() }, "Invite the bot by using this link: %s", inviteUrl);
 
   // Load handlers here
   log.info("Loaded " + bot.messageHandlers.length + " message handlers");

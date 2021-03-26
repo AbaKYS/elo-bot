@@ -12,8 +12,10 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsc",
+    "watch": "tsc -w",
     "start": "node out/index.js",
     "cli": "node out/cli.js",
+    "cli:registerCommands": "node out/cli.js registerCommands",
     "test": "mocha"
   },
   "keywords": [],

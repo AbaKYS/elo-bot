@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, MessageEmbed } from "discord.js";
 import api from "../../api";
 import logger from "../../logging";
 import { SlashCommandListener } from "./api/listen-to-commands";
@@ -43,7 +43,7 @@ export const historyCommandHandler: SlashCommandListener = {
 
     try {
       let histories;
-      if (amountOfGames == 0) {
+      if (amountOfGames === 0 || !amountOfGames) {
         amountOfGames = 10;
       }
       if (playerName) {
@@ -59,7 +59,17 @@ export const historyCommandHandler: SlashCommandListener = {
         histories.length,
         playerName
       );
-
+      const embed = new MessageEmbed()
+        .setTitle('History')
+        .setDescription(`Latest ${amountOfGames} games for ${playerName ? playerName : 'all players'}.`)
+        .addField('\u200b', '\u200b')
+        .addFields(histories.map(({winners, losers, time, deltaElo}) =>
+          ({
+            name: `${time.toLocaleString('nb')}`,
+            value: `**${joinStrings(winners)}** beat **${joinStrings(losers)}**, gaining **${deltaElo}** elo.`,
+            inline: false
+          })
+        ));
       const content =
         histories
           .map(
@@ -71,7 +81,8 @@ export const historyCommandHandler: SlashCommandListener = {
               )}** and gained **${deltaElo}** elo.`
           )
           .join(`\n`) || "No matches found";
-      return { content: content };
+      return { embeds: [embed]};
+      // return { embeds: [embed], content: 'content'};
     } catch (err) {
       log.error({ err }, "Failed to fetch history: %s", err.message);
       return { content: "Failed to fetch history: " + err.message };
