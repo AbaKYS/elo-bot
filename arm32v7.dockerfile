@@ -22,8 +22,27 @@ FROM arm32v7/node:14-alpine
 # Add QEMU
 COPY --from=qemu qemu-arm-static /usr/bin
 
-USER root
+ENV USER=elobot
+ENV UID=901
+ENV GID=901
+
+RUN addgroup \
+    -g "$GID" \
+    --system  \
+    "$USER" \
+    && \
+    adduser \
+    --disabled-password \
+    --gecos "" \
+    --ingroup "$USER" \
+    --uid "$UID" \
+    --system \
+    "$USER"
+
 WORKDIR /opt/app
+RUN chown "$USER":"$USER" . 
+USER $USER
+
 ENV NODE_ENV=production
 
 ADD package.json package-lock.json ./

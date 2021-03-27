@@ -9,8 +9,26 @@ RUN npm ci && npm run build
 # App stage
 FROM node:14.16-alpine
 
-USER root
+ENV USER=elobot
+ENV UID=901
+ENV GID=901
+
+RUN addgroup \
+    -g "$GID" \
+    --system  \
+    "$USER" \
+    && \
+    adduser \
+    --disabled-password \
+    --gecos "" \
+    --ingroup "$USER" \
+    --uid "$UID" \
+    --system \
+    "$USER"
+
 WORKDIR /opt/app
+RUN chown "$USER":"$USER" . 
+USER $USER
 ENV NODE_ENV=production
 
 ADD package.json package-lock.json ./
